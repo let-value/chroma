@@ -1,12 +1,26 @@
-import { ChromaApp } from "./chroma-js";
-import { AppInfo } from "./chroma-js/src/AppInfo";
+import * as vscode from "vscode";
 
-const chroma = new ChromaApp(
-    new AppInfo(
-        "VSChroma",
+import { ChromaApp, ChromaInstance } from "./chroma-js";
+import { AppCategory } from "./chroma-js/src/AppInfo";
+import { AvailableDevices } from "./chroma-js/src/Devices";
+
+export default class ConnectionManager implements vscode.Disposable {
+    chroma = new ChromaApp(
+        "Chroma",
         "Visual Studio Code Plugin for Razer Chroma",
-        new AuthorInfo("pastezzz@gmai.com", "Tomasz Kwolek"),
+        "Alexander Chehovskii",
+        "let.value@gmail.com",
         [AvailableDevices.Keyboard],
         AppCategory.Application
-    )
-);
+    );
+
+    instance?: ChromaInstance;
+
+    async start() {
+        this.instance = await this.chroma.Instance(true);
+    }
+
+    dispose() {
+        this.instance?.destroy();
+    }
+}
