@@ -1,0 +1,3 @@
+[submodule "src/chroma-js"]
+	path = src/chroma-js
+	url = https://github.com/let-value/chroma-js.git
