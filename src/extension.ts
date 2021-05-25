@@ -1,17 +1,24 @@
+import { inherits } from "util";
 import * as vscode from "vscode";
-import ConnectionManager from "./instance";
+import Connection from "./connection";
+import Manager from "./manager";
 
 export function activate(context: vscode.ExtensionContext) {
-    const connection = new ConnectionManager();
+    const connection = new Connection();
+    const manager = new Manager(connection);
+
+    async function init() {
+        await connection.start();
+        await manager.start();
+    }
 
     try {
-        connection.start();
+        init();
     } catch (error) {
         console.error(error);
     }
 
-    context.subscriptions.push(connection);
+    context.subscriptions.push(connection, manager);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}
