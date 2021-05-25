@@ -1,9 +1,8 @@
-import { inherits } from "util";
-import * as vscode from "vscode";
+import { ExtensionContext } from "vscode";
 import Connection from "./connection";
 import Manager from "./manager";
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
     const connection = new Connection();
     const manager = new Manager(connection);
 

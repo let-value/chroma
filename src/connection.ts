@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import { Disposable } from "vscode";
 import {
     AppCategory,
     AppInfo,
@@ -8,7 +8,7 @@ import {
     ChromaInstance
 } from "./chroma-js";
 
-export default class Connection implements vscode.Disposable {
+export default class Connection implements Disposable {
     chroma = new ChromaApp(
         new AppInfo(
             "Chroma",
