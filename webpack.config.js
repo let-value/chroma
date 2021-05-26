@@ -1,42 +1,86 @@
 //@ts-check
 
-'use strict';
+"use strict";
 
-const path = require('path');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const { readFileSync } = require("fs");
+const path = require("path");
+const { ContextReplacementPlugin } = require("webpack");
 
 /**@type {import('webpack').Configuration}*/
 const config = {
-  target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
-	mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
+    target: "node",
+    mode: "none",
+    node: {
+        __dirname: true,
+        __filename: true
+    },
 
-  entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
-  output: {
-    // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'extension.js',
-    libraryTarget: 'commonjs2'
-  },
-  devtool: 'nosources-source-map',
-  externals: {
-    vscode: 'commonjs vscode' // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
-    // modules added here also need to be added in the .vsceignore file
-  },
-  resolve: {
-    // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
-    extensions: ['.ts', '.js']
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader'
-          }
+    entry: "./src/extension.ts",
+    context: __dirname,
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "extension.js",
+        libraryTarget: "commonjs2"
+    },
+    devtool: "nosources-source-map",
+    externals: {
+        vscode: "commonjs vscode",
+        iohook: "iohook"
+    },
+    resolve: {
+        extensions: [".ts", ".js", ".node"]
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: "ts-loader"
+                    }
+                ]
+            },
+            {
+                test: /\.(node|so|dll|png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: "file-loader"
+                    }
+                ]
+            }
         ]
-      }
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+        includeDependency("iohook"),
+        new ContextReplacementPlugin(/iohook/)
     ]
-  }
 };
+
+function includeDependency(pkg) {
+    const pkgJson = path.join(pkg, "package.json");
+    const pkgJsonPath = require.resolve(pkgJson);
+    const pkgPath = path.join(pkgJsonPath, "../");
+
+    const content = readFileSync(pkgJsonPath, {
+        encoding: "utf8"
+    });
+    const pkgName = JSON.parse(content).name;
+
+    return new CopyPlugin({
+        patterns: [
+            {
+                from: pkgPath,
+                to: path.resolve(__dirname, `./dist/node_modules/${pkgName}`),
+                globOptions: {
+                    ignore: ["**/node_modules/**"]
+                }
+            }
+        ]
+    });
+}
+
 module.exports = config;

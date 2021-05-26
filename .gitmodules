@@ -4,3 +4,6 @@
 [submodule "src/vs-code-default-keybindings"]
 	path = src/vs-code-default-keybindings
 	url = https://github.com/let-value/vs-code-default-keybindings
+[submodule "iohook"]
+	path = iohook
+	url = https://github.com/let-value/iohook.git
