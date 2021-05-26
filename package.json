@@ -43,6 +43,7 @@
         "webpack-cli": "^4.4.0"
     },
     "dependencies": {
+        "jsonc": "^2.0.0",
         "node-fetch": "^2.6.1"
     }
 }

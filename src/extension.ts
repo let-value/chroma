@@ -4,7 +4,7 @@ import Manager from "./manager";
 
 export function activate(context: ExtensionContext) {
     const connection = new Connection();
-    const manager = new Manager(connection);
+    const manager = new Manager(context, connection);
 
     async function init() {
         await connection.start();

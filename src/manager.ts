@@ -1,11 +1,15 @@
-import { window, workspace, Disposable } from "vscode";
+import { window, workspace, Disposable, ExtensionContext } from "vscode";
 import Connection from "./connection";
-import getKeyBindings from "./utils/getKeyBindings";
+import getKeyBindings from "./keyBindings/getKeyBindings";
 
 export default class Manager implements Disposable {
-    constructor(public connection: Connection) {}
+    constructor(
+        public context: ExtensionContext,
+        public connection: Connection
+    ) {}
     async start() {
-        console.log(await getKeyBindings());
+        const keyBindings = await getKeyBindings(this.context);
+
         const configuration = workspace.getConfiguration();
     }
     dispose() {}

@@ -1,3 +1,6 @@
 [submodule "src/chroma-js"]
 	path = src/chroma-js
 	url = https://github.com/let-value/chroma-js.git
+[submodule "src/vs-code-default-keybindings"]
+	path = src/vs-code-default-keybindings
+	url = https://github.com/let-value/vs-code-default-keybindings
