@@ -1,5 +1,5 @@
-import { names, scancodes } from "../data/scancodes";
-import { KeyboardHookEvent } from "../keyboardHook";
+import { chromaCodes, names, scancodes } from "../data/scancodes";
+import { KeyboardHookEvent } from "./keyboardHook";
 
 export function getKeyCode(search: string): number {
     const code = names[search];
@@ -25,6 +25,17 @@ export function getKeyName(input: number | KeyboardHookEvent) {
     }
 
     console.error("Unknown key code", code);
+
+    return undefined;
+}
+
+export function getChromaKey(keyCode: number) {
+    const hasKey = chromaCodes[keyCode];
+    if (hasKey) {
+        return hasKey;
+    }
+
+    console.error("Unknown key code", keyCode);
 
     return undefined;
 }
