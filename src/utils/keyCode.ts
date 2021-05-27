@@ -29,6 +29,25 @@ export function getKeyName(input: number | KeyboardHookEvent) {
     return undefined;
 }
 
+export const modifierKeys = [
+    names.ShiftLeft,
+    names.ControlLeft,
+    names.AltLeft,
+    names.ShiftRight,
+    names.ControlRight,
+    names.AltRight
+];
+
+export const systemKeys = [names.MetaLeft, names.Escape, names.MenuRight];
+
+export const editingKeys = [
+    names.Enter,
+    names.NumpadEnter,
+    names.Backspace,
+    names.Insert,
+    names.Delete
+];
+
 export function getChromaKey(keyCode: number) {
     const hasKey = chromaCodes[keyCode];
     if (hasKey) {
@@ -38,4 +57,8 @@ export function getChromaKey(keyCode: number) {
     console.error("Unknown key code", keyCode);
 
     return undefined;
+}
+
+export function getChromaKeys(keys: number[]) {
+    return keys.map((x) => getChromaKey(x)!).filter(Boolean);
 }

@@ -53,5 +53,7 @@ export default function getKeysLookup(keyBindings: KeyBinding[]) {
         }
     );
 
+    console.log(keyBindings.length, keys.length);
+
     return keys;
 }

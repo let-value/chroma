@@ -90,13 +90,13 @@ const scancodes: Record<number, string> = {
     3612: "NumpadEnter",
     3613: "ControlRight",
     3637: "NumpadDivide",
-    3639: "0x46",
+    3639: "PrintScreen",
     3640: "AltRight",
     3653: "Pause",
 
     3667: "NumpadDelete",
     3675: "MetaLeft",
-    3677: "ContextMenu",
+    3677: "MenuRight",
     3655: "NumpadHome",
     3657: "NumpadPageUp",
     3663: "NumpadEnd",
@@ -130,8 +130,8 @@ names["⌃"] = names.ControlLeft;
 names.Shift = names.ShiftLeft;
 names["⇧"] = names.ShiftLeft;
 
-names.Alt = names.ShiftLeft;
-names["⌥"] = names.ShiftLeft;
+names.Alt = names.AltLeft;
+names["⌥"] = names.AltLeft;
 
 names["⌘"] = names.MetaLeft;
 names.Meta = names.MetaLeft;
@@ -272,6 +272,7 @@ const chromaCodes = {
     [names.F9]: Key.F9,
     [names.F10]: Key.F10,
     [names.NumLock]: Key.NumLock,
+    [names.PrintScreen]: Key.PrintScreen,
     [names.ScrollLock]: Key.Scroll,
     [names.Numpad7]: Key.Num7,
     [names.Numpad8]: Key.Num8,
@@ -295,7 +296,7 @@ const chromaCodes = {
     [names.Pause]: Key.Pause,
     [names.NumpadDecimal]: Key.NumDecimal,
     [names.MetaLeft]: Key.LeftWindows,
-    [names.ContextMenu]: Key.RightMenu,
+    [names.MenuRight]: Key.RightMenu,
     [names.NumpadHome]: Key.Num7,
     [names.NumpadPageUp]: Key.Num9,
     [names.NumpadEnd]: Key.Num1,

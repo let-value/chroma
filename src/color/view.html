@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script>
+            const vscode = acquireVsCodeApi();
+            const colors = {};
+            Object.values(
+                document.getElementsByTagName("html")[0].style
+            ).forEach((variable) => {
+                const colorName = variable.replace("--vscode-", "");
+                colors[colorName] = document
+                    .getElementsByTagName("html")[0]
+                    .style.getPropertyValue(variable);
+            });
+            vscode.postMessage(colors);
+        </script>
+    </body>
+</html>

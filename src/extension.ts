@@ -2,7 +2,7 @@ import { ExtensionContext } from "vscode";
 import { configure } from "mobx";
 import Connection from "./connection";
 import KeyboardListener from "./listener";
-import Manager from "./manager";
+import Display from "./display";
 
 import State from "./state/State";
 
@@ -16,7 +16,7 @@ export function activate(context: ExtensionContext) {
     const connection = new Connection();
     const layout = new KeyboardListener(state.keyboard);
 
-    const manager = new Manager(context, connection, state);
+    const manager = new Display(context, connection, state);
 
     async function init() {
         await connection.start();
