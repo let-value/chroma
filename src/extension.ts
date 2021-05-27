@@ -1,12 +1,19 @@
 import { ExtensionContext } from "vscode";
 import Connection from "./connection";
 import { KeyboardHook } from "./keyboardHook";
+import KeyboardLayout from "./keyboardLayout";
 import Manager from "./manager";
 
+import State from "./state/State";
+
 export function activate(context: ExtensionContext) {
+    const state = new State();
+
     const connection = new Connection();
     const hook = new KeyboardHook();
-    const manager = new Manager(context, connection, hook);
+    const layout = new KeyboardLayout(state.keyboard);
+
+    const manager = new Manager(context, connection, hook, state);
 
     async function init() {
         await connection.start();
@@ -20,7 +27,7 @@ export function activate(context: ExtensionContext) {
         console.error(error);
     }
 
-    context.subscriptions.push(connection, hook, manager);
+    context.subscriptions.push(connection, hook, layout, manager);
 }
 
 export function deactivate() {}

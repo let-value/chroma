@@ -42,25 +42,20 @@ const config = {
                         loader: "ts-loader"
                     }
                 ]
-            },
-            {
-                test: /\.(node|so|dll|png|jpe?g|gif)$/i,
-                use: [
-                    {
-                        loader: "file-loader"
-                    }
-                ]
             }
         ]
     },
     plugins: [
         new CleanWebpackPlugin(),
-        includeDependency("iohook"),
+        includeDependency("iohook", {
+            ignore: ["**/node_modules/**"]
+        }),
+
         new ContextReplacementPlugin(/iohook/)
     ]
 };
 
-function includeDependency(pkg) {
+function includeDependency(pkg, globOptions) {
     const pkgJson = path.join(pkg, "package.json");
     const pkgJsonPath = require.resolve(pkgJson);
     const pkgPath = path.join(pkgJsonPath, "../");
@@ -68,16 +63,14 @@ function includeDependency(pkg) {
     const content = readFileSync(pkgJsonPath, {
         encoding: "utf8"
     });
-    const pkgName = JSON.parse(content).name;
+    const pkgName = pkg; // JSON.parse(content).name;
 
     return new CopyPlugin({
         patterns: [
             {
                 from: pkgPath,
                 to: path.resolve(__dirname, `./dist/node_modules/${pkgName}`),
-                globOptions: {
-                    ignore: ["**/node_modules/**"]
-                }
+                globOptions
             }
         ]
     });
