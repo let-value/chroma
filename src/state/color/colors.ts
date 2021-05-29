@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import {
     ColorTheme,
     ColorThemeKind,
@@ -24,7 +24,7 @@ export default class ThemeState implements Disposable {
         this.handleActiveColorTheme(window.activeColorTheme);
 
         const debouncedHandler = debounce(
-            this.handleActiveColorTheme,
+            this.handleActiveColorTheme.bind(this),
             10 * 1000,
             {
                 leading: false,
@@ -39,12 +39,12 @@ export default class ThemeState implements Disposable {
         makeAutoObservable(this);
     }
 
-    private handleActiveColorTheme = (colorTheme: ColorTheme) => {
+    private handleActiveColorTheme(colorTheme: ColorTheme) {
         this.kind = colorTheme.kind;
         this.updateColors();
-    };
+    }
 
-    updateColors = () => {
+    private updateColors() {
         if (this.panel) {
             this.panel.dispose();
         }
@@ -62,12 +62,14 @@ export default class ThemeState implements Disposable {
 
         let subsription = this.panel.webview.onDidReceiveMessage(
             (colors: VSTheme) => {
-                this.colors = colors;
+                runInAction(() => {
+                    this.colors = colors;
+                });
                 subsription.dispose();
                 this.panel!.dispose();
             }
         );
-    };
+    }
 
     dispose() {
         this.subscriptions.forEach((x) => x.dispose());

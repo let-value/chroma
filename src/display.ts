@@ -31,14 +31,15 @@ export default class Display extends Animation implements Disposable {
         super();
 
         this.subscriptions.push(
-            { dispose: autorun(this.handleState.bind(this)) },
-            workspace.onDidChangeConfiguration(this.handleState.bind(this))
+            { dispose: autorun(this.handleState.bind(this)) }
+            //workspace.onDidChangeConfiguration(this.handleState.bind(this))
         );
     }
 
     async start() {
         await tryToRun(() => this.connection.instance?.playAnimation(this));
         await tryToRun(() => this.sendInitialFrame());
+        this.sendFrame();
     }
 
     private handleState() {
@@ -60,10 +61,12 @@ export default class Display extends Animation implements Disposable {
     }
 
     private async sendFrame() {
+        console.log("frame", this.Frames.length);
+
         const frame = new AnimationFrame();
         frame.setAll(Color.Black);
 
-        if (this.state.configuration?.get<boolean>("solarized")) {
+        if (this.state.configuration.get<boolean>("solarized")) {
             applySolarizedColors(frame);
         }
 
@@ -74,12 +77,27 @@ export default class Display extends Animation implements Disposable {
             applyThemeColors(frame, this.state.theme.colors);
         }
 
-        applyCustomColors(frame, this.state.configuration?.colors);
+        applyCustomColors(frame, this.state.configuration.colors);
 
         applyPressedColors(frame, this.state.keyboard);
 
         this.Frames.push(frame);
         await this.Instance?.send(frame);
+
+        if (this.Frames.length > 50) {
+            const effectIds: string[] = [];
+            for (const frame of this.Frames) {
+                if (frame.Keyboard.effectId !== "") {
+                    effectIds.push(frame.Keyboard.effectId);
+                }
+                frame.Keyboard.effectId = "";
+            }
+
+            if (this.Instance) {
+                await this.Instance.deleteEffect(effectIds);
+                this.Frames = [];
+            }
+        }
     }
 
     public async stop() {

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, observable } from "mobx";
 import { Disposable, ExtensionContext, workspace } from "vscode";
 import ThemeState from "./color/colors";
 import ExtensionSettings from "./ExtensionSettings";
@@ -9,13 +9,14 @@ export default class State implements Disposable {
     keyboard = new KeyboardState();
     theme = new ThemeState();
     bindings: KeyBindings;
-    configuration?: ExtensionSettings;
+    configuration: ExtensionSettings = {} as ExtensionSettings;
     isDebug: boolean = false;
     private subscriptions: Disposable[] = [];
     constructor(context: ExtensionContext) {
         this.bindings = new KeyBindings(context);
+        this.handleConfiguration();
 
-        makeAutoObservable(this);
+        makeAutoObservable(this, { configuration: observable });
 
         this.subscriptions.push(
             workspace.onDidChangeConfiguration(
@@ -24,8 +25,6 @@ export default class State implements Disposable {
             this.keyboard,
             this.theme
         );
-
-        this.handleConfiguration();
     }
 
     async start() {
