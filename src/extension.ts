@@ -1,27 +1,18 @@
 import { ExtensionContext } from "vscode";
-import { configure } from "mobx";
 import Connection from "./connection";
-import KeyboardListener from "./listener";
 import Display from "./display";
 
 import State from "./state/State";
 
-configure({
-    enforceActions: "never"
-});
-
 export function activate(context: ExtensionContext) {
-    const state = new State();
-
+    const state = new State(context);
     const connection = new Connection();
-    const layout = new KeyboardListener(state.keyboard);
-
-    const manager = new Display(context, connection, state);
+    const display = new Display(connection, state);
 
     async function init() {
         await connection.start();
-        await layout.start();
-        await manager.start();
+        await state.start();
+        await display.start();
     }
 
     try {
@@ -30,7 +21,7 @@ export function activate(context: ExtensionContext) {
         console.error(error);
     }
 
-    context.subscriptions.push(connection, layout, manager);
+    context.subscriptions.push(connection, state, display);
 }
 
 export function deactivate() {}

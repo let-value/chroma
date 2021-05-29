@@ -3,7 +3,7 @@ import { names } from "../data/scancodes";
 import KeyBinding from "../keyBindings/KeyBinding";
 import { getKeyCode, getKeyName } from "./keyCode";
 
-interface Key {
+export interface Key {
     ctrl: boolean;
     shift: boolean;
     cmd: boolean;
@@ -14,7 +14,7 @@ interface Key {
     keyCode: number;
 }
 
-interface KeyLookup {
+export interface KeyLookup {
     sequence: Key[];
     binding: KeyBinding;
 }

@@ -14,17 +14,14 @@ import { VSTheme } from "./VSTheme";
 
 import view from "html-loader!./view.html";
 
-export default class ColorState implements Disposable {
+export default class ThemeState implements Disposable {
     private subscriptions: Disposable[] = [];
-    kind: ColorThemeKind;
+    kind?: ColorThemeKind;
     private panel?: WebviewPanel;
     private name = "Chroma";
     colors?: VSTheme = undefined;
     constructor() {
-        const configuration = workspace.getConfiguration();
-
-        this.kind = window.activeColorTheme.kind;
-        this.updateColors();
+        this.handleActiveColorTheme(window.activeColorTheme);
 
         const debouncedHandler = debounce(
             this.handleActiveColorTheme,

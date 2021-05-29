@@ -21,8 +21,8 @@ class RunContext<T extends Function> {
 
             this.resolve(result);
             return;
-        } catch {
-            //
+        } catch (error) {
+            console.log("ignored error", error);
         }
 
         if (this.attempts === 0) {
