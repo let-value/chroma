@@ -8,9 +8,10 @@ export default class KeyBindings implements Disposable {
     private subscriptions: Disposable[] = [];
     keyBindings: KeyBinding[] = [];
     lookUps: KeyLookup[] = [];
-
     constructor(private context: ExtensionContext) {
         makeAutoObservable(this);
+
+        this.handleConfiguration();
 
         this.subscriptions.push(
             workspace.onDidChangeConfiguration(
@@ -21,11 +22,11 @@ export default class KeyBindings implements Disposable {
 
     async getKeys() {
         const keyBindings = await getKeyBindings(this.context);
-        const lookUps = getKeysLookup(this.keyBindings);
+        const { keys } = getKeysLookup(keyBindings);
 
         runInAction(() => {
             this.keyBindings = keyBindings;
-            this.lookUps = lookUps;
+            this.lookUps = keys;
         });
     }
 

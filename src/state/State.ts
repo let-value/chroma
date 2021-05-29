@@ -1,5 +1,5 @@
 import { makeAutoObservable, observable } from "mobx";
-import { Disposable, ExtensionContext, workspace } from "vscode";
+import { Disposable, ExtensionContext, workspace, window } from "vscode";
 import ThemeState from "./color/colors";
 import ExtensionSettings from "./ExtensionSettings";
 import KeyBindings from "./KeyBindings";
