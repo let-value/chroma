@@ -6,7 +6,7 @@ import {
     AvailableDevices,
     ChromaApp,
     ChromaInstance
-} from "./chroma-js";
+} from "./chroma-js/src";
 
 export default class Connection implements Disposable {
     chroma = new ChromaApp(

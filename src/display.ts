@@ -1,25 +1,21 @@
 import { autorun } from "mobx";
-import { ColorThemeKind, Disposable, ExtensionContext } from "vscode";
+import { Disposable, ExtensionContext } from "vscode";
 import Connection from "./connection";
 import getKeyBindings from "./keyBindings/getKeyBindings";
 import KeyBinding from "./keyBindings/KeyBinding";
 import State from "./state/State";
 import getKeysLookup from "./utils/getCommands";
-import { Animation, AnimationFrame, Color, Key } from "./chroma-js";
-import tryToRun from "./utils/tryToRun";
-import { IPlayInstance } from "./chroma-js";
 import {
-    getChromaKey,
-    modifierKeys,
-    systemKeys,
-    getChromaKeys,
-    editingKeys
-} from "./utils/keyCode";
-import chroma from "chroma-js";
+    Animation,
+    AnimationFrame,
+    Color,
+    IPlayInstance
+} from "./chroma-js/src";
+import tryToRun from "./utils/tryToRun";
 
-export const modifierChromaKeys = getChromaKeys(modifierKeys);
-export const systemChromaKeys = [...getChromaKeys(systemKeys), Key.Function];
-export const editingChromaKeys = getChromaKeys(editingKeys);
+import applyThemeColors from "./display/themeColors";
+import applyPressedColors from "./display/pressedColors";
+import applySolarizedColors from "./display/solarizedColors";
 
 export default class Display extends Animation implements Disposable {
     keyBindings: KeyBinding[] = [];
@@ -58,14 +54,6 @@ export default class Display extends Animation implements Disposable {
         await this.sendFrame();
     }
 
-    getColor(color: string, luminance?: number) {
-        let result = chroma(color);
-        if (luminance) {
-            result = result.luminance(luminance, "hsl");
-        }
-        return new Color(result.hex("rgb"));
-    }
-
     async sendFrame() {
         if (!this.state.theme.colors || !this.isPlaying) {
             return;
@@ -73,37 +61,10 @@ export default class Display extends Animation implements Disposable {
 
         const frame = new AnimationFrame();
 
-        const baseColor = this.getColor(
-            this.state.theme.colors.foreground,
-            0.1
-        );
-        frame.Keyboard.setAll(baseColor);
+        applySolarizedColors(frame);
+        //applyThemeColors(frame, this.state.theme.colors);
+        applyPressedColors(frame, this.state.keyboard);
 
-        //set modifier key
-        const modifierColor = this.getColor(
-            this.state.theme.colors["button-background"]
-        );
-        frame.Keyboard.setKey(modifierChromaKeys, modifierColor);
-
-        //set enter and editing keys
-        const editingColor = this.getColor(
-            this.state.theme.colors["symbolIcon-variableForeground"]
-        );
-        frame.Keyboard.setKey(editingChromaKeys, editingColor);
-
-        //set enter and editing keys
-        const systemColor = this.getColor(
-            this.state.theme.colors["symbolIcon-classForeground"]
-        );
-        frame.Keyboard.setKey(systemChromaKeys, systemColor);
-
-        //set active keys
-        const activeKeys = Array.from(this.state.keyboard.pressed.values())
-            .map((event) => getChromaKey(event.keycode)!)
-            .filter(Boolean);
-        frame.Keyboard.setKey(activeKeys, Color.While);
-
-        //frame.Keyboard.setKey
         this.Frames.push(frame);
 
         await this.Instance?.send(frame);

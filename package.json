@@ -3,6 +3,62 @@
     "displayName": "chroma",
     "description": "",
     "version": "0.0.1",
+    "contributes": {
+        "configuration": {
+            "title": "Chroma",
+            "properties": {
+                "chroma.solarized": {
+                    "type": "boolean",
+                    "description": "This extension contains keyboard backlighting inspired by the solarized color scheme",
+                    "default": false
+                },
+                "chroma.theme": {
+                    "type": "boolean",
+                    "description": "Get the backlighting colors from the current theme (UI colors)",
+                    "default": true
+                },
+                "chroma.colors.base": {
+                    "type": "string",
+                    "description": "Basic key color"
+                },
+                "chroma.colors.group.modifier": {
+                    "type": "string",
+                    "description": "Color for modifier keys"
+                },
+                "chroma.colors.group.editing": {
+                    "type": "string",
+                    "description": "Color for editing keys"
+                },
+                "chroma.colors.group.system": {
+                    "type": "string",
+                    "description": "Color for system keys"
+                },
+                "chroma.colors.keys": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "title": "Key color definition",
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "description": "Key name"
+                            },
+                            "default": {
+                                "type": "string",
+                                "description": "Default key color in any of CSS formats"
+                            },
+                            "highlighted": {
+                                "type": "string",
+                                "description": "Key color for shortcut highlighting"
+                            }
+                        }
+                    },
+                    "markdownDescription": "Color overrides for each key [Key names](https://github.com/let-value/chroma/blob/master/src/data/scancodes.ts)",
+                    "default": []
+                }
+            }
+        }
+    },
     "engines": {
         "vscode": "^1.56.0"
     },

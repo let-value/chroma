@@ -123,6 +123,8 @@ const names = Object.fromEntries(
     Object.entries(scancodes).map(([code, name]) => [name, parseInt(code)])
 );
 
+names.Function = -1; //find scancode
+
 names.Ctrl = names.ControlLeft;
 names.Control = names.ControlLeft;
 names["⌃"] = names.ControlLeft;
@@ -287,6 +289,7 @@ const chromaCodes = {
     [names.Numpad3]: Key.Num3,
     [names.Numpad0]: Key.Num0,
     [names.NumpadDecimal]: Key.NumDecimal,
+    [names.NumpadDelete]: Key.NumDecimal,
     [names.F11]: Key.F11,
     [names.F12]: Key.F12,
     [names.NumpadEnter]: Key.NumEnter,
@@ -316,7 +319,8 @@ const chromaCodes = {
     [names.ArrowDown]: Key.Down,
     [names.PageDown]: Key.PageDown,
     [names.Insert]: Key.Insert,
-    [names.Delete]: Key.Delete
+    [names.Delete]: Key.Delete,
+    [names.Function]: Key.Function
 };
 
 export { scancodes, names, chromaCodes };
