@@ -1,5 +1,5 @@
 import { Disposable } from "vscode";
-import iohook from "iohook";
+import iohook from "@let-value/iohook";
 import EventEmitter from "events";
 
 export interface KeyboardHookEvent {
